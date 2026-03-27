@@ -1,0 +1,220 @@
+.combat-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ---- Header ---- */
+.ct-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.ct-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-gold);
+  flex: 1;
+}
+
+/* ---- Setup list ---- */
+.ct-setup-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.ct-setup-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.ct-setup-init {
+  font-family: var(--font-mono);
+  width: 28px;
+  text-align: center;
+  color: var(--color-gold);
+  font-weight: bold;
+}
+
+.ct-setup-name { flex: 1; font-weight: 600; }
+.ct-setup-hp, .ct-setup-ac { color: var(--color-text-muted); font-size: 0.85rem; }
+
+/* ---- Add Form ---- */
+.ct-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ct-form-row {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.ct-form-row .input { flex: 1; min-width: 80px; }
+
+/* ---- Import ---- */
+.ct-import-panel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.ct-import-label {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Active Combat ---- */
+.ct-combat-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.ct-combat-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid transparent;
+  flex-wrap: wrap;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.ct-combat-row.active {
+  border-left-color: var(--color-gold);
+  background: rgba(201,168,76,0.06);
+  box-shadow: var(--shadow-gold);
+}
+
+.ct-combat-row.defeated {
+  opacity: 0.5;
+  border-left-color: var(--color-danger-dim);
+}
+
+.ct-turn-marker {
+  width: 14px;
+  color: var(--color-gold);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.ct-ci-init {
+  font-family: var(--font-mono);
+  width: 26px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-gold-dim);
+  flex-shrink: 0;
+}
+
+.ct-ci-name {
+  flex: 1;
+  min-width: 100px;
+  font-weight: 600;
+}
+
+.ct-ci-name.player { color: var(--color-gold); }
+
+.ct-hp-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.ct-hp-display {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.ct-hp-display:hover { background: var(--color-surface); }
+
+.ct-hp-input {
+  width: 60px !important;
+  padding: 2px 4px !important;
+  font-size: 0.9rem !important;
+  font-family: var(--font-mono) !important;
+}
+
+.ct-ci-ac {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* ---- Conditions ---- */
+.ct-conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+}
+
+.ct-condition-badge {
+  font-size: 0.65rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--color-condition);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.ct-condition-badge:hover { opacity: 0.7; }
+
+.ct-cond-picker {
+  width: 44px !important;
+  font-size: 0.75rem !important;
+  padding: 1px 2px !important;
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+/* ---- Quick HP buttons ---- */
+.ct-quick-hp {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  flex-basis: 100%;
+  padding-left: 44px;
+}
+
+.ct-quick-input {
+  width: 60px !important;
+  padding: var(--space-xs) !important;
+  font-size: 0.85rem !important;
+}
+
+.ct-next-btn {
+  width: 100%;
+  margin-top: var(--space-sm);
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .ct-quick-hp { padding-left: 0; }
+  .ct-combat-row { gap: var(--space-xs); }
+}

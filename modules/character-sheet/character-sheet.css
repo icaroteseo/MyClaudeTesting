@@ -1,0 +1,165 @@
+.character-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ---- Section (collapsible) ---- */
+.cs-section {
+  transition: box-shadow var(--transition-fast);
+}
+
+.cs-section[open] { box-shadow: var(--shadow-md); }
+
+.cs-section-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  list-style: none;
+  padding: 0 0 var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-md);
+  user-select: none;
+}
+
+.cs-section-title::-webkit-details-marker { display: none; }
+.cs-section-title::before {
+  content: '▸ ';
+  color: var(--color-gold-dim);
+  transition: transform var(--transition-fast);
+}
+details[open] .cs-section-title::before { content: '▾ '; }
+
+/* ---- Identity ---- */
+.cs-identity-grid {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* ---- Abilities ---- */
+.cs-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+}
+
+.cs-ability {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+}
+
+.cs-ability-name {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--color-gold-dim);
+  letter-spacing: 0.1em;
+}
+
+.cs-ability-score {
+  width: 60px !important;
+  font-size: 1.3rem !important;
+  text-align: center;
+  padding: var(--space-xs) !important;
+}
+
+.cs-ability-mod {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  color: var(--color-gold);
+  font-weight: bold;
+}
+
+/* ---- Combat Stats ---- */
+.cs-hp-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.cs-hp-input {
+  width: 90px !important;
+}
+
+/* ---- Skills ---- */
+.cs-pb-display {
+  font-family: var(--font-display);
+  color: var(--color-gold-dim);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-md);
+}
+
+.cs-skills-cols {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-lg);
+}
+
+.cs-sub-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--color-gold-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+
+.cs-skill-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 2px 0;
+  font-size: 0.9rem;
+}
+
+.cs-prof-check {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-gold);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cs-skill-mod {
+  font-family: var(--font-mono);
+  width: 32px;
+  text-align: right;
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
+.cs-skill-name {
+  flex: 1;
+}
+
+.cs-skill-ability {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ---- Narrative ---- */
+.cs-textarea-field {
+  margin-top: var(--space-md);
+}
+
+.cs-textarea-field:first-child { margin-top: 0; }
+
+/* ---- Responsive ---- */
+@media (max-width: 700px) {
+  .cs-abilities { grid-template-columns: repeat(3, 1fr); }
+  .cs-skills-cols { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 400px) {
+  .cs-abilities { grid-template-columns: repeat(2, 1fr); }
+}

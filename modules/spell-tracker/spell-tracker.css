@@ -1,0 +1,208 @@
+.spell-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ---- Spell Slots ---- */
+.st-slots-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+.st-slots-header .panel-title {
+  flex: 1;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.st-slot-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.st-slot-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.st-slot-empty {
+  opacity: 0.5;
+}
+
+.st-slot-level {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--color-gold-dim);
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.st-slot-max-input {
+  width: 44px !important;
+  padding: var(--space-xs) !important;
+  font-size: 0.85rem !important;
+  text-align: center;
+}
+
+.st-slot-pips {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.st-pip {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-gold-dim);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.st-pip:hover {
+  border-color: var(--color-gold);
+  background: rgba(201,168,76,0.2);
+}
+
+.st-pip.used {
+  background: var(--color-gold-dim);
+  border-color: var(--color-gold-dim);
+}
+
+.st-slot-count {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  width: 40px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ---- Concentration ---- */
+.st-concentration {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.st-concentration.active {
+  border-color: var(--color-warning);
+  background: rgba(230, 126, 34, 0.08);
+}
+
+.st-conc-label { font-size: 0.9rem; color: var(--color-text-muted); }
+.st-conc-spell { color: var(--color-warning); }
+.st-conc-empty { font-style: italic; }
+
+/* ---- Spell List ---- */
+.st-filter-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.st-filter-row .input { flex: 1; }
+.st-level-select { width: 130px; }
+
+.st-spell-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.st-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: var(--space-lg);
+}
+
+.st-spell-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.st-spell-row:hover { border-color: var(--color-border-light); }
+.st-spell-row.unprepared { opacity: 0.5; }
+
+.st-spell-info {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-sm);
+}
+
+.st-spell-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.st-spell-meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.st-spell-tag {
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold-dim);
+  color: var(--color-bg);
+}
+
+.st-spell-actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.st-del-btn { color: var(--color-text-dim) !important; }
+.st-del-btn:hover { color: var(--color-danger) !important; border-color: var(--color-danger) !important; }
+
+/* ---- Add Spell ---- */
+.st-add-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.st-add-form .input:first-child,
+.st-add-form .textarea,
+.st-add-form .btn {
+  grid-column: 1 / -1;
+}
+
+.st-check-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+@media (max-width: 600px) {
+  .st-add-form { grid-template-columns: 1fr; }
+  .st-add-form * { grid-column: auto; }
+}

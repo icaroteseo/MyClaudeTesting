@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D&D 5e Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=MedievalSharp&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/global.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-title">
+      <span class="app-title-icon">⚔</span>
+      <h1>D&D 5e Companion</h1>
+    </div>
+    <nav class="app-nav" role="navigation" aria-label="Module navigation">
+      <button class="nav-btn active" data-module="dice-roller" aria-current="page">
+        <span class="nav-icon">🎲</span>
+        <span class="nav-label">Dice Roller</span>
+      </button>
+      <button class="nav-btn" data-module="character-sheet">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">Character</span>
+      </button>
+      <button class="nav-btn" data-module="spell-tracker">
+        <span class="nav-icon">✨</span>
+        <span class="nav-label">Spells</span>
+      </button>
+      <button class="nav-btn" data-module="combat-tracker">
+        <span class="nav-icon">⚔</span>
+        <span class="nav-label">Combat</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="app" class="app-main" role="main"></main>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
