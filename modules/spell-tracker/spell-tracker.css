@@ -4,15 +4,14 @@
   gap: var(--space-lg);
 }
 
-/* ---- Spell Slots ---- */
+/* ---- Slot header ---- */
 .st-slots-header {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   flex-wrap: wrap;
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
-
 .st-slots-header .panel-title {
   flex: 1;
   margin-bottom: 0;
@@ -20,35 +19,36 @@
   border-bottom: none;
 }
 
+/* ---- Slot grid ---- */
 .st-slot-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 6px;
 }
 
 .st-slot-row {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-xs) 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--color-border);
 }
-
-.st-slot-empty {
-  opacity: 0.5;
-}
+.st-slot-row:last-child { border-bottom: none; }
+.st-slot-empty { opacity: 0.45; }
 
 .st-slot-level {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--color-gold-dim);
-  width: 40px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  width: 38px;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .st-slot-max-input {
   width: 44px !important;
-  padding: var(--space-xs) !important;
+  padding: 4px !important;
   font-size: 0.85rem !important;
   text-align: center;
 }
@@ -64,27 +64,25 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid var(--color-gold-dim);
+  border: 2px solid var(--color-border-light);
   background: transparent;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
-
 .st-pip:hover {
-  border-color: var(--color-gold);
-  background: rgba(201,168,76,0.2);
+  border-color: var(--color-accent);
+  background: var(--color-accent-bg);
 }
-
 .st-pip.used {
-  background: var(--color-gold-dim);
-  border-color: var(--color-gold-dim);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .st-slot-count {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  width: 40px;
+  font-size: 0.78rem;
+  color: var(--color-text-dim);
+  width: 38px;
   text-align: right;
   flex-shrink: 0;
 }
@@ -95,54 +93,52 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
-
 .st-concentration.active {
   border-color: var(--color-warning);
-  background: rgba(230, 126, 34, 0.08);
+  background: var(--color-warning-bg);
 }
-
 .st-conc-label { font-size: 0.9rem; color: var(--color-text-muted); }
-.st-conc-spell { color: var(--color-warning); }
-.st-conc-empty { font-style: italic; }
+.st-conc-spell { color: var(--color-warning); font-weight: 600; }
+.st-conc-empty { font-style: italic; font-size: 0.9rem; }
 
-/* ---- Spell List ---- */
+/* ---- Filter row ---- */
 .st-filter-row {
   display: flex;
   gap: var(--space-sm);
   margin-bottom: var(--space-md);
 }
-
 .st-filter-row .input { flex: 1; }
 .st-level-select { width: 130px; }
 
+/* ---- Spell list ---- */
 .st-spell-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 6px;
 }
 
 .st-empty {
   color: var(--color-text-muted);
+  font-size: 0.9rem;
   font-style: italic;
   text-align: center;
-  padding: var(--space-lg);
+  padding: var(--space-xl);
 }
 
 .st-spell-row {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
   transition: border-color var(--transition-fast);
 }
-
 .st-spell-row:hover { border-color: var(--color-border-light); }
 .st-spell-row.unprepared { opacity: 0.5; }
 
@@ -151,36 +147,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-xs) var(--space-sm);
+  gap: 4px var(--space-sm);
 }
 
-.st-spell-name {
-  font-weight: 600;
-  color: var(--color-text);
-}
+.st-spell-name { font-weight: 600; font-size: 0.95rem; }
 
-.st-spell-meta {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-}
+.st-spell-meta { font-size: 0.78rem; color: var(--color-text-muted); }
 
 .st-spell-tag {
-  font-size: 0.7rem;
-  font-weight: bold;
-  padding: 1px 5px;
-  border-radius: var(--radius-sm);
-  background: var(--color-gold-dim);
-  color: var(--color-bg);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 99px;
+  background: var(--color-accent-bg);
+  color: var(--color-accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.st-spell-actions {
-  display: flex;
-  gap: var(--space-xs);
-  flex-shrink: 0;
-}
-
+.st-spell-actions { display: flex; gap: 4px; flex-shrink: 0; }
 .st-del-btn { color: var(--color-text-dim) !important; }
-.st-del-btn:hover { color: var(--color-danger) !important; border-color: var(--color-danger) !important; }
+.st-del-btn:hover { color: var(--color-danger-dark) !important; border-color: var(--color-danger) !important; }
 
 /* ---- Add Spell ---- */
 .st-add-form {
@@ -188,12 +175,9 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-sm);
 }
-
 .st-add-form .input:first-child,
 .st-add-form .textarea,
-.st-add-form .btn {
-  grid-column: 1 / -1;
-}
+.st-add-form .btn { grid-column: 1 / -1; }
 
 .st-check-row {
   grid-column: 1 / -1;
