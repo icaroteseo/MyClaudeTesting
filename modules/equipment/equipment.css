@@ -1,0 +1,220 @@
+.equipment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ---- Purse ---- */
+.eq-coin-row {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+.eq-coin {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.eq-coin-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  width: 26px;
+}
+.eq-coin-gp .eq-coin-label { color: var(--color-gold-bright); }
+.eq-coin-sp .eq-coin-label { color: #c0c6cf; }
+.eq-coin-cp .eq-coin-label { color: #c98a5b; }
+
+.eq-coin-input { width: 96px; }
+
+.eq-purse-total {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+.eq-quick-row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.eq-quick-amt { width: 90px; }
+.eq-quick-unit { width: 72px; }
+
+/* ---- Starting equipment ---- */
+.eq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.eq-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--color-accent-bg);
+  border: 1px solid rgba(212,168,67,0.3);
+  color: var(--color-accent-dark);
+}
+
+.eq-chip-dim {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-dim);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.eq-option {
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(0,0,0,0.15);
+  margin-bottom: var(--space-sm);
+}
+
+.eq-option-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.eq-option-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+  line-height: 1.5;
+}
+
+.eq-claimed-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.eq-claimed-msg {
+  color: var(--color-success-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ---- Item lists (inventory + shop) ---- */
+.eq-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eq-shop-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.eq-empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.eq-item-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition-fast);
+  flex-wrap: wrap;
+}
+.eq-item-row:hover { border-color: var(--color-border-light); }
+
+.eq-unaffordable { opacity: 0.55; }
+
+.eq-item-info {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.eq-item-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.eq-item-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+}
+
+.eq-item-price {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  min-width: 56px;
+  text-align: right;
+}
+
+.eq-qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eq-qty-btn { padding: 4px 9px; }
+
+.eq-qty-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 34px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.eq-del-btn { color: var(--color-text-dim) !important; }
+.eq-del-btn:hover { color: var(--color-danger-dark) !important; border-color: var(--color-danger) !important; }
+
+.eq-inv-totals {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ---- Shop ---- */
+.eq-shop-purse {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-md);
+}
+
+.eq-filter-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.eq-filter-row .input { flex: 1; }
+.eq-cat-select { width: 180px; }
+
+@media (max-width: 600px) {
+  .eq-cat-select { width: 130px; }
+}
