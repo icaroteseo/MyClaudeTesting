@@ -6,6 +6,7 @@
 import { roll, rollMultiple, rollWithAdvantage, rollWithDisadvantage, rollNotation, STANDARD_DICE } from '../../shared/dice.js';
 import { el, formatModifier } from '../../shared/utils.js';
 import { showToast } from '../../shared/components.js';
+import { store } from '../../shared/store.js';
 
 // Module state
 let history = [];
@@ -25,6 +26,8 @@ function injectStyles() {
 
 export function mount(container) {
   injectStyles();
+  store.hydrate('rollHistory');
+  history = store.get('rollHistory', []);
   root = el('div', { class: 'dice-roller' });
   root.appendChild(render());
   container.appendChild(root);
@@ -75,6 +78,11 @@ function render() {
   quickRollSection.appendChild(modRow);
   frag.appendChild(quickRollSection);
 
+  // Latest result showcase
+  const resultPanel = el('div', { class: 'panel dr-result-panel' });
+  resultPanel.appendChild(el('p', { class: 'dr-result-empty' }, 'Roll a die to tempt fate…'));
+  frag.appendChild(resultPanel);
+
   // Custom notation roller
   const customSection = el('div', { class: 'panel dr-custom' });
   customSection.appendChild(el('h2', { class: 'panel-title' }, 'Custom Roll'));
@@ -94,6 +102,7 @@ function render() {
   const clearBtn = el('button', { class: 'btn btn-ghost btn-sm dr-clear-btn' }, 'Clear');
   clearBtn.addEventListener('click', () => {
     history = [];
+    store.set('rollHistory', history);
     renderHistory(histList);
   });
   histSection.querySelector('.panel-title').after(clearBtn);
@@ -156,6 +165,26 @@ function rollCustom(notation) {
 function addToHistory(entry) {
   history.unshift({ ...entry, time: new Date().toLocaleTimeString() });
   if (history.length > 50) history.pop();
+  store.set('rollHistory', history);
+  showResult(entry);
+}
+
+function showResult(entry) {
+  const panel = root?.querySelector('.dr-result-panel');
+  if (!panel) return;
+  panel.innerHTML = '';
+
+  const wrap = el('div', { class: `dr-result${entry.isCrit ? ' crit' : ''}${entry.isFumble ? ' fumble' : ''}` });
+  wrap.appendChild(el('div', { class: 'dr-result-total' }, String(entry.total)));
+
+  const meta = el('div', { class: 'dr-result-meta' });
+  meta.appendChild(el('div', { class: 'dr-result-label' }, entry.label));
+  meta.appendChild(el('div', { class: 'dr-result-detail' }, entry.detail));
+  if (entry.isCrit)   meta.appendChild(el('div', { class: 'dr-result-flag crit' }, '★ Critical!'));
+  if (entry.isFumble) meta.appendChild(el('div', { class: 'dr-result-flag fumble' }, '☠ Fumble'));
+  wrap.appendChild(meta);
+
+  panel.appendChild(wrap);
 }
 
 function renderHistory(container) {
