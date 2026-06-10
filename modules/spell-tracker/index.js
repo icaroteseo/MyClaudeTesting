@@ -4,8 +4,9 @@
  */
 
 import { store } from '../../shared/store.js';
-import { el, fullCasterSpellSlots, SPELL_SCHOOLS } from '../../shared/utils.js';
+import { el, casterSpellSlots, maxSpellLevel, SPELL_SCHOOLS } from '../../shared/utils.js';
 import { showToast } from '../../shared/components.js';
+import { SPELL_COMPENDIUM, RACIAL_SPELLS, SPELLCASTING_CLASSES } from '../../shared/spell-compendium.js';
 
 const STORE_KEY = 'spells';
 
@@ -21,6 +22,9 @@ const DEFAULT_STATE = {
 
 let root = null;
 let state = null;
+
+// Compendium filter state — module-level so it survives rebuild()
+const compFilters = { query: '', cls: '', level: '', castable: false, initialized: false };
 
 function injectStyles() {
   if (!document.getElementById('styles-spell-tracker')) {
@@ -54,6 +58,7 @@ function rebuild() {
   root.appendChild(buildSlots());
   root.appendChild(buildConcentration());
   root.appendChild(buildSpellList());
+  root.appendChild(buildCompendium());
   root.appendChild(buildAddSpell());
 }
 
@@ -130,19 +135,24 @@ function buildSlotRow(level) {
 }
 
 function syncSlotsFromCharacter() {
+  store.hydrate('character');
   const char = store.get('character');
   if (!char?.level || !char?.class) {
     showToast('Set your class and level in the Character tab first.', 'danger');
     return;
   }
-  const slotTable = fullCasterSpellSlots(char.level);
+  const slotTable = casterSpellSlots(char.class, char.level);
+  const hasSlots = slotTable.some(n => n > 0);
   for (let i = 1; i <= 9; i++) {
     state.slots[i].max = slotTable[i] ?? 0;
     state.slots[i].used = Math.min(state.slots[i].used, state.slots[i].max);
   }
   save();
   rebuild();
-  showToast(`Synced to level ${char.level}`, 'success');
+  showToast(hasSlots
+    ? `Synced slots for ${char.class} level ${char.level}`
+    : `${char.class} has no spell slots at level ${char.level}.`,
+    hasSlots ? 'success' : 'info');
 }
 
 // ---- Concentration ----
@@ -251,6 +261,15 @@ function buildSpellRow(spell) {
 }
 
 function castSpell(spell) {
+  if (spell.level === 0) {
+    if (spell.concentration) {
+      state.concentrating = spell.name;
+      save();
+      rebuild();
+    }
+    showToast(`Cast ${spell.name} (cantrip — no slot needed).`, 'info');
+    return;
+  }
   // Find lowest available slot at or above spell level
   for (let lvl = spell.level; lvl <= 9; lvl++) {
     const slot = state.slots[lvl];
@@ -267,6 +286,165 @@ function castSpell(spell) {
     }
   }
   showToast(`No spell slots available for level ${spell.level}+.`, 'danger');
+}
+
+// ---- Spell Compendium ----
+function buildCompendium() {
+  const panel = el('div', { class: 'panel st-compendium' });
+  panel.appendChild(el('h2', { class: 'panel-title' }, '📜 Spell Compendium'));
+
+  store.hydrate('character');
+  const char = store.get('character') ?? {};
+  const charClass = (char.class || '').trim();
+  const charLevel = char.level || 1;
+  const maxLvl = maxSpellLevel(charClass, charLevel);
+  const matchedClass = SPELLCASTING_CLASSES.find(c => charClass.toLowerCase().includes(c.toLowerCase())) || '';
+
+  // Racial innate spells available at the character's level
+  const race = (char.race || '').toLowerCase();
+  const racialNames = new Set();
+  for (const r of RACIAL_SPELLS) {
+    if (race.includes(r.match)) {
+      for (const s of r.spells) if (charLevel >= s.minLevel) racialNames.add(s.name);
+    }
+  }
+
+  // Default the class filter to the character's class once
+  if (!compFilters.initialized) {
+    compFilters.cls = matchedClass;
+    compFilters.initialized = true;
+  }
+
+  // Context line: who you are and what you can cast
+  const chips = el('div', { class: 'st-comp-chips' });
+  if (matchedClass || racialNames.size) {
+    if (charClass) chips.appendChild(el('span', { class: 'st-comp-chip' }, `${charClass} · Level ${charLevel}`));
+    chips.appendChild(el('span', { class: 'st-comp-chip' },
+      maxLvl > 0 ? `Casts up to level ${maxLvl} spells` : 'Cantrips only'));
+    if (racialNames.size) {
+      chips.appendChild(el('span', { class: 'st-comp-chip st-chip-racial' },
+        `${char.race}: ${[...racialNames].join(', ')}`));
+    }
+  } else {
+    chips.appendChild(el('span', { class: 'st-comp-chip st-chip-dim' },
+      'Set your class & level in the Character tab to see what you can cast.'));
+  }
+  panel.appendChild(chips);
+
+  // Filters
+  const filterRow = el('div', { class: 'st-filter-row' });
+  const searchInput = el('input', { type: 'text', class: 'input', placeholder: 'Search spells...', value: compFilters.query });
+  const classSel = el('select', { class: 'select st-level-select' });
+  classSel.appendChild(el('option', { value: '' }, 'All Classes'));
+  for (const c of SPELLCASTING_CLASSES) classSel.appendChild(el('option', { value: c }, c));
+  classSel.value = compFilters.cls;
+  const levelSel = el('select', { class: 'select st-level-select' });
+  levelSel.appendChild(el('option', { value: '' }, 'All Levels'));
+  levelSel.appendChild(el('option', { value: '0' }, 'Cantrips'));
+  for (let i = 1; i <= 9; i++) levelSel.appendChild(el('option', { value: String(i) }, `Level ${i}`));
+  levelSel.value = compFilters.level;
+  filterRow.append(searchInput, classSel, levelSel);
+  panel.appendChild(filterRow);
+
+  const castableWrap = el('label', { class: 'st-castable-toggle' });
+  const castableCheck = el('input', { type: 'checkbox', class: 'cs-prof-check' });
+  castableCheck.checked = compFilters.castable;
+  castableWrap.append(castableCheck, ' Only spells I can cast now');
+  panel.appendChild(castableWrap);
+
+  // A spell is castable if the character's class (or race) grants it and
+  // the character has slots of its level — racial spells skip the slot check.
+  const canCast = (spell) => {
+    const classOk = matchedClass && spell.classes.includes(matchedClass);
+    const racialOk = racialNames.has(spell.name);
+    if (!classOk && !racialOk) return false;
+    if (spell.level === 0) return true;
+    if (racialOk && !classOk) return true;
+    return spell.level <= maxLvl;
+  };
+
+  const list = el('div', { class: 'st-spell-list st-comp-list' });
+  const renderList = () => {
+    list.innerHTML = '';
+    const q = compFilters.query.toLowerCase();
+    const filtered = SPELL_COMPENDIUM.filter(s =>
+      (!q || s.name.toLowerCase().includes(q) || s.school.toLowerCase().includes(q)) &&
+      (!compFilters.cls || s.classes.includes(compFilters.cls) || racialNames.has(s.name)) &&
+      (compFilters.level === '' || String(s.level) === compFilters.level) &&
+      (!compFilters.castable || canCast(s))
+    );
+    if (filtered.length === 0) {
+      list.appendChild(el('p', { class: 'st-empty' }, 'No spells match these filters.'));
+      return;
+    }
+    filtered.sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
+    for (const spell of filtered) {
+      list.appendChild(buildCompendiumRow(spell, canCast(spell), racialNames.has(spell.name)));
+    }
+  };
+  searchInput.addEventListener('input', () => { compFilters.query = searchInput.value; renderList(); });
+  classSel.addEventListener('change', () => { compFilters.cls = classSel.value; renderList(); });
+  levelSel.addEventListener('change', () => { compFilters.level = levelSel.value; renderList(); });
+  castableCheck.addEventListener('change', () => { compFilters.castable = castableCheck.checked; renderList(); });
+  renderList();
+
+  panel.appendChild(list);
+  return panel;
+}
+
+function buildCompendiumRow(spell, castable, racial) {
+  const wrap = el('div', { class: 'st-comp-row-wrap' });
+  const row = el('div', { class: `st-spell-row st-comp-row${castable ? '' : ' st-uncastable'}` });
+
+  const info = el('div', { class: 'st-spell-info' });
+  const nameBtn = el('button', { class: 'st-comp-name', title: 'Show details' }, spell.name);
+  info.appendChild(nameBtn);
+  info.appendChild(el('span', { class: 'st-spell-meta' },
+    `${spell.level === 0 ? 'Cantrip' : `Level ${spell.level}`} · ${spell.school} · ${spell.castingTime}`));
+  if (spell.concentration) info.appendChild(el('span', { class: 'st-spell-tag' }, 'C'));
+  if (spell.ritual) info.appendChild(el('span', { class: 'st-spell-tag' }, 'R'));
+  if (racial) info.appendChild(el('span', { class: 'st-spell-tag st-tag-racial' }, 'Racial'));
+  if (castable) info.appendChild(el('span', { class: 'st-spell-tag st-tag-castable' }, '✓'));
+  row.appendChild(info);
+
+  const actions = el('div', { class: 'st-spell-actions' });
+  const known = state.spells.some(s => s.name === spell.name);
+  const learnBtn = el('button', { class: 'btn btn-ghost btn-sm' }, known ? '✓ Known' : 'Learn');
+  if (known) learnBtn.disabled = true;
+  learnBtn.addEventListener('click', () => {
+    state.spells.push({
+      name: spell.name,
+      level: spell.level,
+      school: spell.school,
+      castingTime: spell.castingTime,
+      concentration: !!spell.concentration,
+      ritual: !!spell.ritual,
+      description: spell.description,
+    });
+    save();
+    rebuild();
+    showToast(`${spell.name} added to your spells.`, 'success');
+  });
+  actions.appendChild(learnBtn);
+
+  if (castable) {
+    const castBtn = el('button', { class: 'btn btn-primary btn-sm' }, 'Cast');
+    castBtn.addEventListener('click', () => castSpell(spell));
+    actions.appendChild(castBtn);
+  }
+  row.appendChild(actions);
+
+  const desc = el('div', { class: 'st-comp-desc' },
+    el('p', {}, spell.description),
+    el('p', { class: 'st-comp-desc-meta' },
+      `Range: ${spell.range} · Components: ${spell.components} · Duration: ${spell.duration} · Classes: ${spell.classes.join(', ')}`));
+  desc.style.display = 'none';
+  nameBtn.addEventListener('click', () => {
+    desc.style.display = desc.style.display === 'none' ? 'block' : 'none';
+  });
+
+  wrap.append(row, desc);
+  return wrap;
 }
 
 // ---- Add Spell Form ----

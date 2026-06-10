@@ -169,6 +169,105 @@
 .st-del-btn { color: var(--color-text-dim) !important; }
 .st-del-btn:hover { color: var(--color-danger-dark) !important; border-color: var(--color-danger) !important; }
 
+/* ---- Spell Compendium ---- */
+.st-comp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.st-comp-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 99px;
+  background: var(--color-accent-bg);
+  border: 1px solid rgba(212,168,67,0.3);
+  color: var(--color-accent-dark);
+}
+
+.st-chip-racial {
+  background: rgba(140,107,207,0.12);
+  border-color: rgba(140,107,207,0.4);
+  color: #c4aef0;
+}
+
+.st-chip-dim {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-dim);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.st-castable-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  cursor: pointer;
+  user-select: none;
+}
+
+.st-comp-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.st-comp-row-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.st-uncastable { opacity: 0.5; }
+
+.st-comp-name {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  cursor: pointer;
+  text-decoration: underline dotted rgba(212,168,67,0.5);
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+.st-comp-name:hover { color: var(--color-accent-dark); }
+
+.st-tag-racial {
+  background: rgba(140,107,207,0.18);
+  color: #c4aef0;
+}
+
+.st-tag-castable {
+  background: var(--color-success-bg);
+  color: var(--color-success-dark);
+}
+
+.st-comp-desc {
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  margin: -2px 0 6px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.st-comp-desc-meta {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+}
+
 /* ---- Add Spell ---- */
 .st-add-form {
   display: grid;

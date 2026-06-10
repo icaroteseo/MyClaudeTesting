@@ -6,6 +6,7 @@
 import { store } from '../../shared/store.js';
 import { abilityModifier, formatModifier, proficiencyBonus, SKILLS, ABILITIES, el, debounce } from '../../shared/utils.js';
 import { showToast } from '../../shared/components.js';
+import { rollCheck } from '../../shared/roll-log.js';
 
 const STORE_KEY = 'character';
 
@@ -127,7 +128,13 @@ function buildAbilityBlock(ability) {
     value: String(char[ability] ?? 10), min: '1', max: '30',
   });
 
-  const modDisplay = el('span', { class: 'cs-ability-mod' }, formatModifier(abilityModifier(char[ability] ?? 10)));
+  const modDisplay = el('button', {
+    class: 'cs-ability-mod',
+    title: `Roll ${ability.toUpperCase()} check (d20)`,
+  }, formatModifier(abilityModifier(char[ability] ?? 10)));
+  modDisplay.addEventListener('click', () => {
+    rollCheck(`${ability.toUpperCase()} check`, abilityModifier(char[ability] ?? 10));
+  });
 
   scoreInput.addEventListener('input', e => {
     const val = parseInt(e.target.value) || 10;
@@ -248,7 +255,11 @@ function buildSaveRow(ability, pb) {
     modSpan.textContent = formatModifier(abilityModifier(char[ability] ?? 10) + (e.target.checked ? pb : 0));
   });
 
-  const modSpan = el('span', { class: 'cs-skill-mod' }, formatModifier(mod));
+  const modSpan = el('button', { class: 'cs-skill-mod', title: `Roll ${ability.toUpperCase()} save (d20)` }, formatModifier(mod));
+  modSpan.addEventListener('click', () => {
+    const current = abilityModifier(char[ability] ?? 10) + (char.savingThrows[ability] ? pb : 0);
+    rollCheck(`${ability.toUpperCase()} save`, current);
+  });
   const nameSpan = el('span', { class: 'cs-skill-name' }, ability.toUpperCase());
 
   row.append(checkbox, modSpan, nameSpan);
@@ -265,7 +276,12 @@ function buildSkillRow(skill, pb) {
   const checkbox = el('input', { type: 'checkbox', class: 'cs-prof-check', title: 'Proficient' });
   checkbox.checked = isProficient || isExpert;
 
-  const modSpan = el('span', { class: 'cs-skill-mod' }, formatModifier(bonus));
+  const modSpan = el('button', { class: 'cs-skill-mod', title: `Roll ${skill.name} (d20)` }, formatModifier(bonus));
+  modSpan.addEventListener('click', () => {
+    const current = abilityModifier(char[ability] ?? 10) +
+      (char.skillExpertise[skill.name] ? pb * 2 : char.skillProficiencies[skill.name] ? pb : 0);
+    rollCheck(skill.name, current);
+  });
 
   checkbox.addEventListener('change', e => {
     if (!e.target.checked) {

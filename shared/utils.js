@@ -63,6 +63,49 @@ export function fullCasterSpellSlots(level) {
   return table[clamped];
 }
 
+const FULL_CASTERS = ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'];
+const HALF_CASTERS = ['paladin', 'ranger'];
+
+/**
+ * Spell slots for any class, by character level.
+ * Full casters use the PHB table; half casters (paladin/ranger) cast as a
+ * full caster of half their level (rounded up, none at level 1); warlocks
+ * get pact magic slots, all of the same level. Non-casters get none.
+ * Returns array indexed [1..9] with slot count (index 0 unused).
+ * @param {string} className
+ * @param {number} level  1–20
+ * @returns {number[]}
+ */
+export function casterSpellSlots(className, level) {
+  const cls = (className || '').toLowerCase();
+  const none = Array(10).fill(0);
+  if (FULL_CASTERS.some(c => cls.includes(c))) return fullCasterSpellSlots(level);
+  if (HALF_CASTERS.some(c => cls.includes(c))) {
+    if (level < 2) return none;
+    return fullCasterSpellSlots(Math.ceil(level / 2));
+  }
+  if (cls.includes('warlock')) {
+    const slotLevel = Math.min(5, Math.ceil(level / 2));
+    const count = level >= 17 ? 4 : level >= 11 ? 3 : level >= 2 ? 2 : 1;
+    none[slotLevel] = count;
+    return none;
+  }
+  return none;
+}
+
+/**
+ * Highest spell level a class can cast at a given character level (0 = cantrips only / none).
+ * @param {string} className
+ * @param {number} level
+ * @returns {number}
+ */
+export function maxSpellLevel(className, level) {
+  const slots = casterSpellSlots(className, level);
+  let max = 0;
+  for (let i = 1; i <= 9; i++) if (slots[i] > 0) max = i;
+  return max;
+}
+
 /**
  * Create a DOM element with optional attributes and children.
  * @param {string} tag
